@@ -1,6 +1,7 @@
 from db import db
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.sql import text
+from flask import session
 
 def register(username, password, admin):
     hash_value = generate_password_hash(password)
@@ -15,3 +16,18 @@ def register(username, password, admin):
 def user_exist(username):
     sql = text("SELECT username FROM users WHERE username=:username")
     return db.session.execute(sql, {"username":username}).fetchone()
+
+def login(username, password):
+    sql = text("SELECT password, id FROM users WHERE username=:username")
+    result = db.session.execute(sql, {"username":username})
+    user = result.fetchone()
+    if user and check_password_hash(user[0], password):
+        session["user_id"] = user[1]
+        session["username"] = username
+        return True
+    else:
+        return False
+
+def logout():
+    del session["user_id"]
+    

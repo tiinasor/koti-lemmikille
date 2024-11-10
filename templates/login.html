@@ -1,0 +1,21 @@
+<title>Sisäänkirjautuminen</title>
+<h1>Sisäänkirjautuminen</h1>
+
+<form action="/login" method="post">
+    <p>
+        Käyttäjätunnus:
+        <input type="text" name="username" value="{{ request.form["username"] }}">
+    <p>
+        Salasana:
+        <input type="password" name="password" value="{{ request.form["password"] }}">
+    <p>
+        <input type="submit" value="Kirjaudu sisään">
+</form>
+    
+{% if message %}
+    <p>
+        Virhe: {{ message }}
+{% endif %}
+    
+<p>
+    Jos sinulla ei ole vielä käyttäjätunnusta, voit rekisteröityä <a href="/register">täällä</a>

@@ -1,2 +1,8 @@
 <title>Koti lemmikille</title>
 <h1>Koti lemmikille</h1>
+
+{% if session.user_id %}
+    Olet kirjautunut sisään nimellä <b>{{ session.username }}</b>. <a href="/logout">Kirjaudu ulos</a>
+{% else %}
+    <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
+{% endif %}
