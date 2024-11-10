@@ -1,0 +1,27 @@
+<title>Rekisteröityminen</title>
+<h1>Rekisteröityminen</h1>
+
+<form action="/register" method="post">
+    <p>
+        Käyttäjätunnus:
+        <input type="text" name="username" value="{{ request.form["username"] }}">
+    <p>
+        Salasana:
+        <input type="password" name="password1" value="{{ request.form["password1"] }}">
+    <p>
+        Salasana uudestaan:
+        <input type="password" name="password2" value="{{ request.form["password2"] }}">
+    <p>
+        Rooli:
+        <select name="admin">
+            <option value=False> peruskäyttäjä
+            <option value=True> ylläpitäjä
+        </select>
+    <p>
+        <input type="submit" value="Rekisteröidy">
+</form>
+
+{% if message %}
+    <p>
+        Virhe: {{ message }}
+{% endif %}
