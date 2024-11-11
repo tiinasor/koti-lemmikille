@@ -4,3 +4,8 @@ CREATE TABLE users (
     password TEXT,
     admin BOOLEAN
 );
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    name TEXT UNIQUE
+);

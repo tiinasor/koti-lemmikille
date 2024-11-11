@@ -6,3 +6,10 @@
 {% else %}
     <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
 {% endif %}
+
+<h2>Tutustu kotia etsiviin lemmikkeihin:</h2>
+<ul>
+    {% for category in categories %}
+    <li><a href="/category/{{ category.id }}">{{ category.name }}</a>
+    {% endfor %}
+</ul>

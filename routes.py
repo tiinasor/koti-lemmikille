@@ -1,10 +1,11 @@
 from app import app
 from flask import render_template, request, redirect
 import users
+import categories
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", categories=categories.get_all_categories())
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
