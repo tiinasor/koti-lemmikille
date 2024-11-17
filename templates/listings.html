@@ -1,0 +1,17 @@
+<title>Ilmoitukset</title>
+<h1>Ilmoitukset</h1>
+
+<ul>
+    {% for listing in listings %}
+        <li>
+            <h2>{{ listing.name }}</h2>
+            <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
+            <p>Sukupuoli: {{ listing.sex }}</p>
+            <p>Sijainti: {{ listing.location_name }}</p>
+            <p>Laji/rotu: {{ listing.species_breed }}</p>
+            <p>Kuvaus: {{ listing.description }}</p>
+            <p>Ilmoittaja: {{ listing.username }}</p>
+            <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+        </li>
+    {% endfor %}
+</ul>

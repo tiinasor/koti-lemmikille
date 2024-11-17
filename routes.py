@@ -86,3 +86,7 @@ def add_listing():
             return redirect("/")
         else:
             return render_template("add_listing.html", message="Ilmoituksen lisääminen epäonnistui")
+
+@app.route("/category/<int:category_id>", methods=["GET"])
+def listings_list(category_id):
+    return render_template("listings.html", listings=listings.get_all_listings(category_id))
