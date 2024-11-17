@@ -1,0 +1,66 @@
+<title>Uusi ilmoitus</title>
+<h1>Uusi ilmoitus</h1>
+
+<form action="/add_listing" method="post">
+    <p>
+        Täytä alle kotia etsivän lemmikin tiedot. Tähdellä (*) merkityt kentät ovat pakollisia.
+    <p>
+        Nimi* (korkeintaan 30 merkkiä)
+        <br>
+        <input type="text" name="name" value="{{ request.form["name"] }}" maxlength="30">
+    <p>
+        Ikä*
+        <br>
+        <input type="number" id="age_years" name="age_years" min="0" max="200" value="0" onkeydown="return false">
+        vuotta,
+        <input type="number" id="age_months" name="age_months" min="0" max="11" value="0" onkeydown="return false">
+        kuukautta
+    <p>
+        Sukupuoli*
+        <br>
+        <select name="sex">
+            <option value="male">Koiras
+            <option value="female">Naaras
+            <option value="unknown">Tuntematon
+        </select>
+    <p>
+        Sijainti*
+        <br>
+        <select name="location">
+            {% for location in locations %}
+            <option value="{{ location.id }}">{{ location.name }}
+            {% endfor %}
+        </select>
+    <p>
+        Kategoria*
+        <br>
+        <select name="category">
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}
+            {% endfor %}
+        </select>
+    <p>
+        Tarkempi laji/rotu (korkeintaan 50 merkkiä)
+        <br>
+        <input type="text" name="species_breed" value="{{ request.form["species_breed"] }}" maxlength="50">
+    <p>
+        Alla voit kuvailla tarkemmin lemmikkiä, esimerkiksi sen luonnetta ja tarpeita.
+        <br>
+        <textarea id="description" name="description" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()"></textarea>
+        <br>
+        <span id="char_count">2000</span> merkkiä jäljellä
+    <script>
+        function updateCharCount() {
+            var textarea = document.getElementById("description");
+            var charCount = document.getElementById("char_count");
+            charCount.textContent = 2000 - textarea.value.length;
+        }
+    </script>
+    <p>
+        <input type="submit" value="Lisää ilmoitus">
+</form>
+
+{% if message %}
+    <p>
+        Virhe: {{ message }}
+{% endif %}

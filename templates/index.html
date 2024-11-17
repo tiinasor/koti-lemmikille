@@ -13,3 +13,10 @@
     <li><a href="/category/{{ category.id }}">{{ category.name }}</a>
     {% endfor %}
 </ul>
+
+<h2>Etsitkö uutta kotia lemmikillesi?</h2>
+{% if session.user_id %}
+    Voit lisätä ilmoituksen kotia etsivästä lemmikistä <a href="/add_listing">täällä</a>
+{% else %}
+    Jos haluat lisätä ilmoituksen kotia etsivästä lemmikistä, <a href="/login">kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
+{% endif %}
