@@ -11,24 +11,26 @@
     <p>
         Ikä*
         <br>
-        <input type="number" id="age_years" name="age_years" min="0" max="200" value="0" onkeydown="return false">
+        <input type="number" id="age_years" name="age_years" min="0" max="200" value="{{ request.form.get("age_years", 0) }}" onkeydown="return false">
         vuotta,
-        <input type="number" id="age_months" name="age_months" min="0" max="11" value="0" onkeydown="return false">
+        <input type="number" id="age_months" name="age_months" min="0" max="11" value="{{ request.form.get("age_months", 0) }}" onkeydown="return false">
         kuukautta
     <p>
         Sukupuoli*
         <br>
         <select name="sex">
-            <option value="male">Koiras
-            <option value="female">Naaras
-            <option value="unknown">Tuntematon
+            <option value="male" {% if request.form["sex"] == "male" %}selected{% endif %}>Koiras</option>
+            <option value="female" {% if request.form["sex"] == "female" %}selected{% endif %}>Naaras</option>
+            <option value="unknown" {% if request.form["sex"] == "unknown" %}selected{% endif %}>Tuntematon</option>
         </select>
     <p>
         Sijainti*
         <br>
         <select name="location">
             {% for location in locations %}
-            <option value="{{ location.id }}">{{ location.name }}
+                <option value="{{ location.id }}" {% if request.form["location"] == location.id|string %}selected{% endif %}>
+                    {{ location.name }}
+                </option>
             {% endfor %}
         </select>
     <p>
@@ -36,7 +38,9 @@
         <br>
         <select name="category">
             {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}
+                <option value="{{ category.id }}" {% if request.form["category"] == category.id|string %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
             {% endfor %}
         </select>
     <p>
@@ -46,21 +50,25 @@
     <p>
         Alla voit kuvailla tarkemmin lemmikkiä, esimerkiksi sen luonnetta ja tarpeita.
         <br>
-        <textarea id="description" name="description" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()"></textarea>
+        <textarea id="description" name="description" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("description", "") }}</textarea>
         <br>
-        <span id="char_count">2000</span> merkkiä jäljellä
+        <span id="char_count">{{ 2000 - (request.form.get("description", "")|length) }}</span> merkkiä jäljellä
+    </p>
     <script>
         function updateCharCount() {
             var textarea = document.getElementById("description");
             var charCount = document.getElementById("char_count");
             charCount.textContent = 2000 - textarea.value.length;
         }
-    </script>
+    </script>   
     <p>
         <input type="submit" value="Lisää ilmoitus">
 </form>
 
-{% if message %}
-    <p>
-        Virhe: {{ message }}
+{% if errors %}
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
