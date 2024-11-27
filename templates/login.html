@@ -1,6 +1,14 @@
-<title>Sisäänkirjautuminen</title>
-<h1>Sisäänkirjautuminen</h1>
+{% extends "layout.html" %}
 
+{% block title %}
+Sisäänkirjautuminen
+{% endblock %}
+
+{% block header %}
+<h1>Sisäänkirjautuminen</h1>
+{% endblock %}
+
+{% block content %}
 <form action="/login" method="post">
     <p>
         Käyttäjätunnus:
@@ -19,3 +27,4 @@
     
 <p>
     Jos sinulla ei ole vielä käyttäjätunnusta, voit rekisteröityä <a href="/register">täällä</a>
+{% endblock %}

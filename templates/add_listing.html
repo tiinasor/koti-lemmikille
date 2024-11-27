@@ -1,6 +1,14 @@
-<title>Uusi ilmoitus</title>
-<h1>Uusi ilmoitus</h1>
+{% extends "layout.html" %}
 
+{% block title %}
+Uusi ilmoitus
+{% endblock %}
+
+{% block header %}
+<h1>Uusi ilmoitus</h1>
+{% endblock %}
+
+{% block content %}
 <form action="/add_listing" method="post">
     <p>
         Täytä alle kotia etsivän lemmikin tiedot. Tähdellä (*) merkityt kentät ovat pakollisia.
@@ -72,3 +80,4 @@
         {% endfor %}
     </ul>
 {% endif %}
+{% endblock %}

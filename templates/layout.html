@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="{{ url_for("static", filename="layout.css") }}">
+
+<title>
+  {% block title %}{% endblock %}
+</title>
+
+<header>
+  {% block header %}{% endblock %}
+</header>
+
+<div class="navbar">
+  <div class="left">
+    <a href="/">Etusivu</a>
+    <div class="dropdown">
+      <button class="dropbtn">Ilmoitukset
+      </button>
+      <div class="dropdown-content">
+        <a href="/category/1">Jyrsijät</a>
+        <a href="/category/2">Kissat</a>
+        <a href="/category/3">Koirat</a>
+        <a href="/category/4">Linnut</a>
+        <a href="/category/5">Matelijat</a>
+        <a href="/category/6">Muut</a>
+      </div>
+    </div>
+    {% if session.user_id %}
+      <a href="/add_listing">Lisää ilmoitus</a>
+    {% endif %}
+  </div>
+  <div class="right">
+    {% if session.user_id %}
+      <span class="user-info">Olet kirjautunut sisään nimellä <b>{{ session.username }}</b>. </span>
+      <a href="/logout">Kirjaudu ulos</a>
+    {% else %}
+      <a href="/login">Kirjaudu sisään</a>
+      <a href="/register">Rekisteröidy</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="content">
+  {% block content %}{% endblock %}
+</div>

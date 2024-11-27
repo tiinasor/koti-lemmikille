@@ -1,12 +1,14 @@
-<title>Koti lemmikille</title>
+{% extends "layout.html" %}
+
+{% block title %}
+Koti lemmikille
+{% endblock %}
+
+{% block header %}
 <h1>Koti lemmikille</h1>
+{% endblock %}
 
-{% if session.user_id %}
-    Olet kirjautunut sisään nimellä <b>{{ session.username }}</b>. <a href="/logout">Kirjaudu ulos</a>
-{% else %}
-    <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
-{% endif %}
-
+{% block content %}
 <h2>Tutustu kotia etsiviin lemmikkeihin:</h2>
 <ul>
     {% for category in categories %}
@@ -20,3 +22,4 @@
 {% else %}
     Jos haluat lisätä ilmoituksen kotia etsivästä lemmikistä, <a href="/login">kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
 {% endif %}
+{% endblock %}

@@ -1,6 +1,14 @@
-<title>Rekisteröityminen</title>
-<h1>Rekisteröityminen</h1>
+{% extends "layout.html" %}
 
+{% block title %}
+Rekisteröityminen
+{% endblock %}
+
+{% block header %}
+<h1>Rekisteröityminen</h1>
+{% endblock %}
+
+{% block content %}
 <form action="/register" method="post">
     <p>
         Käyttäjätunnus:
@@ -25,3 +33,4 @@
     <p>
         Virhe: {{ message }}
 {% endif %}
+{% endblock %}
