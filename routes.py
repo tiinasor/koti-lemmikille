@@ -18,21 +18,30 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
         admin = request.form["admin"]
-        if not username or not password1 or not password2:
-            return render_template("register.html", message="Kaikki kentät on täytettävä")
-        elif users.user_exist(username):
-            return render_template("register.html", message="Käyttäjätunnus on jo käytössä")
-        elif len(username) > 20:
-            return render_template("register.html", message="Käyttäjätunnus saa olla korkeintaan 20 merkkiä pitkä")
-        elif password1 != password2:
-            return render_template("register.html", message="Salasanat eivät täsmää")
-        elif admin != "True" and admin != "False":
-            return render_template("register.html", message="Tuntematon käyttäjärooli")
+
+        errors = []
+        if not username:
+            errors.append("Käyttäjätunnus on täytettävä")
+        if users.user_exist(username):
+            errors.append("Käyttäjätunnus on jo käytössä")
+        if len(username) > 20:
+            errors.append("Käyttäjätunnus saa olla korkeintaan 20 merkkiä pitkä")
+        if not password1:
+            errors.append("Salasana on täytettävä")
+        if len(password1) < 8:
+            errors.append("Salasanan on oltava vähintään 8 merkkiä pitkä")
+        if password1 != password2:
+            errors.append("Salasanat eivät täsmää")
+        if admin != "True" and admin != "False":
+            errors.append("Roolin on oltava peruskäyttäjä tai ylläpitäjä")
+        
+        if len(errors) > 0:
+            return render_template("register.html", errors=errors)
         elif users.register(username, password1, admin):
             users.login(username, password1)
             return redirect("/")
         else:
-            return render_template("register.html", message="Rekisteröityminen epäonnistui")
+            return render_template("register.html", errors="Rekisteröityminen epäonnistui")
  
 @app.route("/login", methods=["GET", "POST"])
 def login():

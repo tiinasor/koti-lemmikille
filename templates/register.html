@@ -11,16 +11,20 @@ Rekisteröityminen
 {% block content %}
 <form action="/register" method="post">
     <p>
-        Käyttäjätunnus:
-        <input type="text" name="username" value="{{ request.form["username"] }}">
+        Käyttäjätunnus (korkeintaan 20 merkkiä):
+        <br>
+        <input type="text" name="username" value="{{ request.form["username"] }}" maxlength="20">
     <p>
-        Salasana:
+        Salasana (vähintään 8 merkkiä):
+        <br>
         <input type="password" name="password1" value="{{ request.form["password1"] }}">
     <p>
         Salasana uudestaan:
+        <br>
         <input type="password" name="password2" value="{{ request.form["password2"] }}">
     <p>
         Rooli:
+        <br>
         <select name="admin">
             <option value=False> peruskäyttäjä
             <option value=True> ylläpitäjä
@@ -29,8 +33,11 @@ Rekisteröityminen
         <input type="submit" value="Rekisteröidy">
 </form>
 
-{% if message %}
-    <p>
-        Virhe: {{ message }}
+{% if errors %}
+    <ul>
+        {% for error in errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
 {% endblock %}
