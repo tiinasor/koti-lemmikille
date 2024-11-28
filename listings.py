@@ -31,6 +31,7 @@ def get_all_listings(category_id):
         JOIN categories ON listings.category = categories.id
         JOIN users ON listings.user_id = users.id
         WHERE listings.category = :category_id
+        ORDER BY listings.created_at DESC
     """)
 
     result = db.session.execute(sql, {"category_id":category_id})
