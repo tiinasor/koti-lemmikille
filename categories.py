@@ -9,3 +9,7 @@ def category_exists(category_id):
     sql = text("SELECT 1 FROM categories WHERE id = :id")
     result = db.session.execute(sql, {"id": category_id}).fetchone()
     return result is not None
+
+def get_category_name(category_id):
+    sql = text("SELECT name FROM categories WHERE id = :id")
+    return db.session.execute(sql, {"id": category_id}).fetchone()[0]

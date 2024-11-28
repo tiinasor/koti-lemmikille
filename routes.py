@@ -107,4 +107,4 @@ def add_listing():
 
 @app.route("/category/<int:category_id>", methods=["GET"])
 def listings_list(category_id):
-    return render_template("listings.html", listings=listings.get_all_listings(category_id))
+    return render_template("listings.html", listings=listings.get_all_listings(category_id), category_name=categories.get_category_name(category_id))
