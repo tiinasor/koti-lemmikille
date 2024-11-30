@@ -16,6 +16,7 @@ CREATE TABLE locations (
 );
 
 CREATE TABLE listings (
+    id SERIAL PRIMARY KEY,
     name TEXT,
     age_months INTEGER,
     sex TEXT,

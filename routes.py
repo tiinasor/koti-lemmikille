@@ -108,3 +108,18 @@ def add_listing():
 @app.route("/category/<int:category_id>", methods=["GET"])
 def listings_list(category_id):
     return render_template("listings.html", listings=listings.get_all_listings(category_id), category_name=categories.get_category_name(category_id))
+
+@app.route("/user_listings", methods=["GET"])
+def user_listings():
+    if "user_id" not in session:
+        return redirect("/")
+    return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]))
+
+@app.route("/delete_listing/<int:listing_id>", methods=["POST"])
+def delete_listing(listing_id):
+    if "user_id" not in session:
+        return redirect("/")
+    if listings.delete_listing(listing_id, session["user_id"]):
+        return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]))
+    else:
+        return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]), message="Ilmoituksen poistaminen epäonnistui")
