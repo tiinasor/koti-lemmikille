@@ -38,13 +38,15 @@ def format_listing(row):
         "months": months
     }
 
-def get_listings(query, parameters):
+def get_listings(query, parameters=None):
+    if parameters is None:
+        parameters = {}
     result = db.session.execute(query, parameters)
     listings = result.fetchall()
     listings_dict = [format_listing(row) for row in listings]
     return listings_dict
 
-def get_all_listings(category_id):
+def get_category_listings(category_id):
     sql = text("""
         SELECT 
             listings.id,
@@ -88,6 +90,27 @@ def get_user_listings(user_id):
     """)
     return get_listings(sql, {"user_id": user_id})
 
+def get_all_listings():
+    sql = text("""
+        SELECT 
+            listings.id,
+            listings.name, 
+            listings.age_months, 
+            listings.sex, 
+            locations.name AS location_name,
+            listings.species_breed, 
+            listings.description,
+            users.username AS username,
+            listings.created_at
+        FROM listings
+        JOIN locations ON listings.location = locations.id
+        JOIN categories ON listings.category = categories.id
+        JOIN users ON listings.user_id = users.id
+        WHERE listings.visible = TRUE
+        ORDER BY listings.created_at DESC
+    """)
+    return get_listings(sql)
+
 def delete_listing(listing_id, user_id):
     try:
         sql = text("""
@@ -96,6 +119,19 @@ def delete_listing(listing_id, user_id):
             WHERE id = :listing_id AND user_id = :user_id
         """)
         db.session.execute(sql, {"listing_id":listing_id, "user_id":user_id})
+        db.session.commit()
+        return True
+    except:
+        return False
+
+def admin_delete_listing(listing_id):
+    try:
+        sql = text("""
+            UPDATE listings
+            SET visible = FALSE
+            WHERE id = :listing_id
+        """)
+        db.session.execute(sql, {"listing_id":listing_id})
         db.session.commit()
         return True
     except:

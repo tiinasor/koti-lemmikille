@@ -18,16 +18,19 @@ def user_exist(username):
     return db.session.execute(sql, {"username":username}).fetchone()
 
 def login(username, password):
-    sql = text("SELECT password, id FROM users WHERE username=:username")
+    sql = text("SELECT password, id, admin FROM users WHERE username=:username")
     result = db.session.execute(sql, {"username":username})
     user = result.fetchone()
     if user and check_password_hash(user[0], password):
         session["user_id"] = user[1]
         session["username"] = username
+        if user[2] == True:
+            session["admin"] = True
         return True
     else:
         return False
 
 def logout():
-    del session["user_id"]
+    session.pop("user_id", None)
+    session.pop("admin", None)
     

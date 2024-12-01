@@ -107,7 +107,7 @@ def add_listing():
 
 @app.route("/category/<int:category_id>", methods=["GET"])
 def listings_list(category_id):
-    return render_template("listings.html", listings=listings.get_all_listings(category_id), category_name=categories.get_category_name(category_id))
+    return render_template("listings.html", listings=listings.get_category_listings(category_id), category_name=categories.get_category_name(category_id))
 
 @app.route("/user_listings", methods=["GET"])
 def user_listings():
@@ -123,3 +123,26 @@ def delete_listing(listing_id):
         return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]))
     else:
         return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]), message="Ilmoituksen poistaminen epäonnistui")
+
+@app.route("/admin_actions", methods=["GET"])
+def admin_actions():
+    if "user_id" not in session or not session.get("admin"):
+        return redirect("/")
+    return render_template("admin_actions.html")
+
+@app.route("/manage_listings", methods=["GET"])
+def manage_listings():
+    if "user_id" not in session or not session.get("admin"):
+        return redirect("/")
+    all_listings = listings.get_all_listings()
+    return render_template("manage_listings.html", listings=all_listings)
+
+@app.route("/admin/delete_listing/<int:listing_id>", methods=["POST"])
+def admin_delete_listing(listing_id):
+    if "user_id" not in session or not session.get("admin"):
+        return redirect("/")
+    if listings.admin_delete_listing(listing_id):
+        return render_template("manage_listings.html", listings=listings.get_all_listings())
+    else:
+        return render_template("manage_listings.html", listings=listings.get_all_listings(), message="Ilmoituksen poistaminen epäonnistui")
+    
