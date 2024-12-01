@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ listing.name }}
+{% endblock %}
+
+{% block header %}
+<h1>{{ listing.name }}</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    <h2>{{ listing.name }}</h2>
+    <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
+    <p>Sukupuoli: {{ listing.sex }}</p>
+    <p>Sijainti: {{ listing.location_name }}</p>
+    <p>Laji/rotu: {{ listing.species_breed }}</p>
+    <p>Kuvaus: {{ listing.description }}</p>
+    <p>Ilmoittaja: {{ listing.username }}</p>
+    <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+    <form action="/send_message" method="post">
+        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+        <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
+        <br>
+        <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
+        <br>
+        <span id="char_count">{{ 2000 - (request.form.get("message", "")|length) }}</span> merkkiä jäljellä
+        <br>
+        <button type="submit">Lähetä</button>
+    </form>
+</div>
+
+<script>
+    function updateCharCount() {
+        var textarea = document.getElementById("message");
+        var charCount = document.getElementById("char_count");
+        charCount.textContent = 2000 - textarea.value.length;
+    }
+</script>   
+{% endblock %}
+

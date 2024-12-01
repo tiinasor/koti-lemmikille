@@ -46,6 +46,27 @@ def get_listings(query, parameters=None):
     listings_dict = [format_listing(row) for row in listings]
     return listings_dict
 
+def get_listing(listing_id):
+    sql = text("""
+        SELECT 
+            listings.id,
+            listings.name, 
+            listings.age_months, 
+            listings.sex, 
+            locations.name AS location_name,
+            listings.species_breed, 
+            listings.description,
+            users.username AS username,
+            listings.created_at
+        FROM listings
+        JOIN locations ON listings.location = locations.id
+        JOIN categories ON listings.category = categories.id
+        JOIN users ON listings.user_id = users.id
+        WHERE listings.visible = TRUE
+        AND listings.id = :listing_id
+    """)
+    return get_listings(sql, {"listing_id": listing_id})[0]
+
 def get_category_listings(category_id):
     sql = text("""
         SELECT 

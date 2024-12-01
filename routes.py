@@ -105,6 +105,12 @@ def add_listing():
         else:
             return render_template("add_listing.html", errors=["Ilmoituksen lisääminen epäonnistui"], categories=categories.get_all_categories(), locations=locations.get_all_locations())
 
+@app.route("/listing/<int:listing_id>", methods=["GET"])
+def listing(listing_id):
+    listing = listings.get_listing(listing_id)
+    print(listing)
+    return render_template("listing.html", listing=listing)
+
 @app.route("/category/<int:category_id>", methods=["GET"])
 def listings_list(category_id):
     return render_template("listings.html", listings=listings.get_category_listings(category_id), category_name=categories.get_category_name(category_id))

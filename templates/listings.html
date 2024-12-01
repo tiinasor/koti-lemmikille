@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header %}
-<h1>{{category_name}}</h1>
+<h1>{{ category_name }}</h1>
 {% endblock %}
 
 {% block content %}
@@ -17,9 +17,10 @@
             <p>Sukupuoli: {{ listing.sex }}</p>
             <p>Sijainti: {{ listing.location_name }}</p>
             <p>Laji/rotu: {{ listing.species_breed }}</p>
-            <p>Kuvaus: {{ listing.description }}</p>
-            <p>Ilmoittaja: {{ listing.username }}</p>
             <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+            <a href="/listing/{{ listing.id }}">
+                <button>Katso ilmoitus</button>
+            </a>
         </li>
     {% endfor %}
 </ul>
