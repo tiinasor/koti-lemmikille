@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Viestiketjut
+{% endblock %}
+
+{% block header %}
+<h1>Viestiketjut</h1>
+{% endblock %}
+
+{% block content %}
+<ul>
+    {% for thread in threads %}
+        <li>
+            <p>Aihe: {{ thread.listing_name }}</p>
+            <p>Käyttäjä: {{ thread.username }}</p>
+            <button onclick="location.href='/thread_messages/{{ thread.id }}'">Näytä viestit</button>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}    

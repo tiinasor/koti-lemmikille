@@ -33,7 +33,8 @@ def format_listing(row):
         "species_breed": row[5],
         "description": row[6],
         "username": row[7],
-        "created_at": row[8].strftime("%d.%m.%Y"),
+        "user_id": row[8],
+        "created_at": row[9].strftime("%d.%m.%Y"),
         "years": years,
         "months": months
     }
@@ -57,6 +58,7 @@ def get_listing(listing_id):
             listings.species_breed, 
             listings.description,
             users.username AS username,
+            users.id AS user_id,
             listings.created_at
         FROM listings
         JOIN locations ON listings.location = locations.id
@@ -78,6 +80,7 @@ def get_category_listings(category_id):
             listings.species_breed, 
             listings.description,
             users.username AS username,
+            users.id AS user_id,
             listings.created_at
         FROM listings
         JOIN locations ON listings.location = locations.id
@@ -100,6 +103,7 @@ def get_user_listings(user_id):
             listings.species_breed, 
             listings.description,
             users.username AS username,
+            users.id AS user_id,
             listings.created_at
         FROM listings
         JOIN locations ON listings.location = locations.id
@@ -122,6 +126,7 @@ def get_all_listings():
             listings.species_breed, 
             listings.description,
             users.username AS username,
+            users.id AS user_id,
             listings.created_at
         FROM listings
         JOIN locations ON listings.location = locations.id

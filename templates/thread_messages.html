@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Viestit
+{% endblock %}
+
+{% block header %}
+<h1>Viestit</h1>
+{% endblock %}
+
+{% block content %}
+<ul>
+    {% for message in messages %}
+        <li>
+            <p>Lähettäjä: {{ message.username }}</p>
+            <p>Viesti: {{ message.message }}</p>
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}

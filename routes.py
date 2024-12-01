@@ -4,6 +4,7 @@ import users
 import categories
 import locations
 import listings
+import messages
 
 @app.route("/")
 def index():
@@ -108,7 +109,6 @@ def add_listing():
 @app.route("/listing/<int:listing_id>", methods=["GET"])
 def listing(listing_id):
     listing = listings.get_listing(listing_id)
-    print(listing)
     return render_template("listing.html", listing=listing)
 
 @app.route("/category/<int:category_id>", methods=["GET"])
@@ -152,3 +152,27 @@ def admin_delete_listing(listing_id):
     else:
         return render_template("manage_listings.html", listings=listings.get_all_listings(), message="Ilmoituksen poistaminen epäonnistui")
     
+@app.route("/threads", methods=["GET"])
+def threads():
+    if "user_id" not in session:
+        return redirect("/")
+    return render_template("threads.html", threads=messages.get_threads(session["user_id"]))
+
+@app.route("/thread_messages/<int:thread_id>", methods=["GET"])
+def thread_messages(thread_id):
+    if "user_id" not in session:
+        return redirect("/")
+    return render_template("thread_messages.html", messages=messages.get_thread_messages(thread_id, session["user_id"]))
+
+@app.route("/send_message", methods=["POST"])
+def send_message():
+    if "user_id" not in session:
+        return redirect("/")
+    recipient_id = request.form["recipient_id"]
+    listing_id = request.form["listing_id"]
+    message = request.form["message"]
+    thread_id = request.form.get('thread_id', None)
+    if messages.create_message(session["user_id"], recipient_id, listing_id, thread_id, message):
+        return render_template("listing.html", message="Viesti lähetetty", listing=listing)
+    else:
+        return render_template("listing.html", message="Viestin lähetys epäonnistui", listing=listing)

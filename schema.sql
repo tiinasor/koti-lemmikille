@@ -28,3 +28,19 @@ CREATE TABLE listings (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     visible BOOLEAN DEFAULT TRUE
 );
+
+CREATE TABLE threads (
+    id SERIAL PRIMARY KEY,
+    listing_id INTEGER REFERENCES listings,
+    sender_id INTEGER REFERENCES users,
+    recipient_id INTEGER REFERENCES users,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    thread_id INTEGER REFERENCES threads,
+    sender_id INTEGER REFERENCES users,
+    message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
