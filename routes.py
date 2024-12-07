@@ -15,6 +15,7 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     if request.method == "POST":
+        users.check_csrf()
         username = request.form["username"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
@@ -49,6 +50,7 @@ def login():
     if request.method == "GET":
         return render_template("login.html")
     if request.method == "POST":
+        users.check_csrf()
         username = request.form["username"]
         password = request.form["password"]
         if users.login(username, password):
@@ -68,6 +70,7 @@ def add_listing():
             return redirect("/")
         return render_template("add_listing.html", categories=categories.get_all_categories(), locations=locations.get_all_locations())
     if request.method == "POST":
+        users.check_csrf()
         name = request.form["name"]
         age_years = request.form["age_years"]
         age_months = request.form["age_months"]
@@ -125,6 +128,7 @@ def user_listings():
 def delete_listing(listing_id):
     if "user_id" not in session:
         return redirect("/")
+    users.check_csrf()
     if listings.delete_listing(listing_id, session["user_id"]):
         return render_template("user_listings.html", listings=listings.get_user_listings(session["user_id"]))
     else:
@@ -147,6 +151,7 @@ def manage_listings():
 def admin_delete_listing(listing_id):
     if "user_id" not in session or not session.get("admin"):
         return redirect("/")
+    users.check_csrf()
     if listings.admin_delete_listing(listing_id):
         return render_template("manage_listings.html", listings=listings.get_all_listings())
     else:
@@ -168,6 +173,7 @@ def thread_messages(thread_id):
 def send_message():
     if "user_id" not in session:
         return redirect("/")
+    users.check_csrf()
     recipient_id = request.form["recipient_id"]
     listing_id = request.form["listing_id"]
     message = request.form["message"]

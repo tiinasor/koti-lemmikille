@@ -10,6 +10,7 @@ Uusi ilmoitus
 
 {% block content %}
 <form action="/add_listing" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Täytä alle kotia etsivän lemmikin tiedot. Tähdellä (*) merkityt kentät ovat pakollisia.
     <p>

@@ -10,6 +10,7 @@ Rekisteröityminen
 
 {% block content %}
 <form action="/register" method="post">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <p>
         Käyttäjätunnus (korkeintaan 20 merkkiä):
         <br>

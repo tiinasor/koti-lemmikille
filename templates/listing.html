@@ -20,6 +20,7 @@
     <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
     {% if session.user_id %}
         <form action="/send_message" method="post">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             <input type="hidden" name="listing_id" value="{{ listing.id }}">
             <input type="hidden" name="recipient_id" value="{{ listing.user_id }}">
             <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>

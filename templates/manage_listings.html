@@ -21,6 +21,7 @@ Hallinnoi ilmoituksia
             <p>Ilmoittaja: {{ listing.username }}</p>
             <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
             <form action="/admin/delete_listing/{{ listing.id }}" method="post">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="hidden" name="listing_id" value="{{ listing.id }}">
                 <input type="submit" value="Poista" onclick="return confirm('Haluatko varmasti poistaa ilmoituksen?');">
             </form>
