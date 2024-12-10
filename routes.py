@@ -173,11 +173,25 @@ def send_message():
     if "user_id" not in session:
         return redirect("/")
     users.check_csrf()
-    recipient_id = request.form["recipient_id"]
+    recipient_id = int(request.form["recipient_id"])
     listing_id = request.form["listing_id"]
     message = request.form["message"]
-    thread_id = request.form.get('thread_id', None)
-    if messages.create_message(session["user_id"], recipient_id, listing_id, thread_id, message):
+
+    listing = listings.get_listing(listing_id)
+    errors = []
+    print(type(recipient_id))
+    if not message:
+        errors.append("Viesti ei saa olla tyhjä")
+    if len(message) > 2000:
+            errors.append("Viesti saa olla korkeintaan 2000 merkkiä pitkä")
+    if listing["user_id"] == session["user_id"]:
+        errors.append("Et voi lähettää viestiä itsellesi")
+    if listing["user_id"] != recipient_id:
+        errors.append("Viestin vastaanottajan on oltava ilmoituksen tekijä")
+    
+    if len(errors) > 0:
+        return render_template("listing.html", errors=errors, listing=listing)
+    elif messages.create_message(session["user_id"], recipient_id, listing_id, message):
         return render_template("listing.html", message="Viesti lähetetty", listing=listing)
     else:
-        return render_template("listing.html", message="Viestin lähetys epäonnistui", listing=listing)
+        return render_template("listing.html", errors=["Viestin lähettäminen epäonnistui"], listing=listing)

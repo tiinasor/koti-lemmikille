@@ -19,22 +19,32 @@
     <p>Ilmoittaja: {{ listing.username }}</p>
     <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
     {% if session.user_id %}
-        <form action="/send_message" method="post">
-            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-            <input type="hidden" name="listing_id" value="{{ listing.id }}">
-            <input type="hidden" name="recipient_id" value="{{ listing.user_id }}">
-            <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
-            <br>
-            <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
-            <br>
-            <span id="char_count">{{ 2000 - (request.form.get("message", "")|length) }}</span> merkkiä jäljellä
-            <br>
-            <button type="submit">Lähetä</button>
-        </form>
-        {% if message %}
-            <p>{{ message }}</p>
-        {% endif %}
+        {% if session.user_id != listing.user_id %}
+            <form action="/send_message" method="post">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                <input type="hidden" name="recipient_id" value="{{ listing.user_id }}">
+                <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
+                <br>
+                <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
+                <br>
+                <span id="char_count">{{ 2000 - (request.form.get("message", "")|length) }}</span> merkkiä jäljellä
+                <br>
+                <button type="submit">Lähetä</button>
+            </form>
 
+            {% if errors %}
+                <ul>
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        {% endif%}
     {% else %}
     <p>Oletko kiinnostanut tarjoamaan kodin tälle lemmikille? <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> lähettääksesi viestin ilmoittajalle.</p>
     {% endif %}

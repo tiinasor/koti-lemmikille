@@ -1,13 +1,13 @@
 from db import db
 from sqlalchemy.sql import text
 
-def create_message(sender_id, recipient_id, listing_id, thread_id, message):
+def create_message(sender_id, recipient_id, listing_id, message):
     try:
-        if thread_id == None:
-            sql = text("INSERT INTO threads (sender_id, recipient_id, listing_id) VALUES (:sender_id, :recipient_id, :listing_id) RETURNING id")
-            result = db.session.execute(sql, {"sender_id":sender_id, "recipient_id":recipient_id, "listing_id":listing_id})
-            thread_id = result.fetchone()[0]
-            db.session.commit()
+        sql = text("INSERT INTO threads (sender_id, recipient_id, listing_id) VALUES (:sender_id, :recipient_id, :listing_id) RETURNING id")
+        result = db.session.execute(sql, {"sender_id":sender_id, "recipient_id":recipient_id, "listing_id":listing_id})
+        thread_id = result.fetchone()[0]
+        db.session.commit()
+
         sql = text("INSERT INTO messages (thread_id, sender_id, message) VALUES (:thread_id, :sender_id, :message)")
         db.session.execute(sql, {"thread_id":thread_id, "sender_id":sender_id, "message":message})
         db.session.commit()
