@@ -166,7 +166,8 @@ def threads():
 def thread_messages(thread_id):
     if "user_id" not in session:
         return redirect("/")
-    return render_template("thread_messages.html", messages=messages.get_thread_messages(thread_id, session["user_id"]))
+    msgs, thread_subject = messages.get_thread_messages(thread_id, session["user_id"])
+    return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject)
 
 @app.route("/send_message", methods=["POST"])
 def send_message():

@@ -42,13 +42,27 @@ def get_thread_messages(thread_id, user_id):
         SELECT 
             messages.message,
             messages.created_at,
+            listings.name AS listing_name,
             users.username
         FROM messages
         JOIN threads ON messages.thread_id = threads.id
+        JOIN listings ON listings.id = threads.listing_id
         JOIN users ON messages.sender_id = users.id
         WHERE threads.id = :thread_id
         AND (threads.sender_id = :user_id OR threads.recipient_id = :user_id)
     """)
     result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
-    messages = result.fetchall()
-    return messages
+    rows = result.fetchall()
+
+    listing_name = rows[0][2]
+
+    messages = []
+    for row in rows:
+        message = {
+            "message": row[0],
+            "created_at": row[1],
+            "username": row[3]
+        }
+        messages.append(message)
+
+    return messages, listing_name
