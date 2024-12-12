@@ -20,10 +20,10 @@
     <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
     {% if session.user_id %}
         {% if session.user_id != listing.user_id %}
-            <form action="/send_message" method="post">
+            <form action="/create_thread" method="post">
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                 <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                <input type="hidden" name="recipient_id" value="{{ listing.user_id }}">
+                <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
                 <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
                 <br>
                 <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>

@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, url_for
 import users
 import categories
 import locations
@@ -166,33 +166,61 @@ def threads():
 def thread_messages(thread_id):
     if "user_id" not in session:
         return redirect("/")
-    msgs, thread_subject = messages.get_thread_messages(thread_id, session["user_id"])
-    return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject)
+    
+    msgs, thread_subject, listing_id = messages.get_thread_messages(thread_id, session["user_id"])
+    listing = listings.get_listing(listing_id)
+    errors = request.args.getlist("errors")
+    return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject, listing=listing, thread_id=thread_id, errors=errors)
 
-@app.route("/send_message", methods=["POST"])
-def send_message():
+@app.route("/create_thread", methods=["POST"])
+def create_thread():
     if "user_id" not in session:
         return redirect("/")
     users.check_csrf()
-    recipient_id = int(request.form["recipient_id"])
+    lister_id = int(request.form["lister_id"])
     listing_id = request.form["listing_id"]
     message = request.form["message"]
 
     listing = listings.get_listing(listing_id)
     errors = []
-    print(type(recipient_id))
     if not message:
         errors.append("Viesti ei saa olla tyhjä")
     if len(message) > 2000:
             errors.append("Viesti saa olla korkeintaan 2000 merkkiä pitkä")
     if listing["user_id"] == session["user_id"]:
         errors.append("Et voi lähettää viestiä itsellesi")
-    if listing["user_id"] != recipient_id:
+    if listing["user_id"] != lister_id:
         errors.append("Viestin vastaanottajan on oltava ilmoituksen tekijä")
     
     if len(errors) > 0:
         return render_template("listing.html", errors=errors, listing=listing)
-    elif messages.create_message(session["user_id"], recipient_id, listing_id, message):
+    elif messages.initial_message(session["user_id"], lister_id, listing_id, message):
         return render_template("listing.html", message="Viesti lähetetty", listing=listing)
     else:
         return render_template("listing.html", errors=["Viestin lähettäminen epäonnistui"], listing=listing)
+
+@app.route("/send_message", methods=["POST"])
+def send_message():
+    if "user_id" not in session:
+        return redirect("/")
+    users.check_csrf()
+    lister_id = int(request.form["lister_id"])
+    message = request.form["message"]
+    thread_id = request.form["thread_id"]
+
+    thread_exists = messages.thread_exists(thread_id, session["user_id"], lister_id)
+
+    errors = []
+    if not message:
+        errors.append("Viesti ei saa olla tyhjä")
+    if len(message) > 2000:
+            errors.append("Viesti saa olla korkeintaan 2000 merkkiä pitkä")
+    if thread_exists == False:
+        errors.append("Viestiketjua ei löydy")
+    
+    if len(errors) > 0:
+        return redirect(url_for("thread_messages", errors=errors, thread_id=thread_id))
+    elif messages.send_message(session["user_id"], thread_id, message):
+        return redirect(url_for("thread_messages", thread_id=thread_id))
+    else:
+        return redirect(url_for("thread_messages", errors=["Viestin lähettäminen epäonnistui"], thread_id=thread_id))

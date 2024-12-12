@@ -32,8 +32,8 @@ CREATE TABLE listings (
 CREATE TABLE threads (
     id SERIAL PRIMARY KEY,
     listing_id INTEGER REFERENCES listings,
-    sender_id INTEGER REFERENCES users,
-    recipient_id INTEGER REFERENCES users,
+    inquirer_id INTEGER REFERENCES users,
+    lister_id INTEGER REFERENCES users,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -9,6 +9,30 @@
 {% endblock %}
 
 {% block content %}
+{% if session.user_id %}
+    <form action="/send_message" method="post">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
+        <input type="hidden" name="thread_id" value="{{ thread_id }}">
+        <label for="message{{ listing.id }}">Lähetä viesti:</label>
+        <br>
+        <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
+        <br>
+        <span id="char_count">{{ 2000 - (request.form.get("message", "")|length) }}</span> merkkiä jäljellä
+        <br>
+        <button type="submit">Lähetä</button>
+    </form>
+
+    {% if errors %}
+        <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endif%}
+</div>
+
 <ul>
     {% for message in messages %}
         <li>
@@ -17,4 +41,12 @@
         </li>
     {% endfor %}
 </ul>
+
+<script>
+    function updateCharCount() {
+        var textarea = document.getElementById("message");
+        var charCount = document.getElementById("char_count");
+        charCount.textContent = 2000 - textarea.value.length;
+    }
+</script>
 {% endblock %}
