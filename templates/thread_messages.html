@@ -38,6 +38,7 @@
         <li>
             <p>Lähettäjä: {{ message.username }}</p>
             <p>Viesti: {{ message.message }}</p>
+            <p>Aika: {{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
         </li>
     {% endfor %}
 </ul>

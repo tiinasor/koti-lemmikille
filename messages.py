@@ -11,7 +11,7 @@ def create_thread(inquirer_id, lister_id, listing_id):
     except:
         return False
 
-def intial_message(inquirer_id, lister_id, listing_id, message):
+def initial_message(inquirer_id, lister_id, listing_id, message):
     try:
         thread_id = create_thread(inquirer_id, lister_id, listing_id)
 
@@ -41,13 +41,20 @@ def get_threads(user_id):
                 WHEN threads.inquirer_id = :user_id THEN lister.username
                 ELSE inquirer.username
             END AS username,
-            listing.name AS listing_name
+            listing.name AS listing_name,
+            messages.created_at AS message_created_at
         FROM threads
         JOIN users AS inquirer ON threads.inquirer_id = inquirer.id
         JOIN users AS lister ON threads.lister_id = lister.id
-        JOIN listings AS listing ON threads.listing_id = listing.id 
+        JOIN listings AS listing ON threads.listing_id = listing.id
+        JOIN messages ON threads.id = messages.thread_id
         WHERE threads.inquirer_id = :user_id OR threads.lister_id = :user_id
-        ORDER BY threads.created_at DESC
+        AND messages.created_at = (
+            SELECT MAX(created_at)
+            FROM messages
+            WHERE thread_id = threads.id
+        )
+        ORDER BY messages.created_at DESC
     """)
     result = db.session.execute(sql, {"user_id": user_id})
     threads = result.fetchall()
@@ -67,6 +74,7 @@ def get_thread_messages(thread_id, user_id):
         JOIN users ON messages.sender_id = users.id
         WHERE threads.id = :thread_id
         AND (threads.inquirer_id = :user_id OR threads.lister_id = :user_id)
+        ORDER BY messages.created_at DESC
     """)
     result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
     rows = result.fetchall()
