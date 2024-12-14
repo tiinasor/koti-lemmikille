@@ -5,32 +5,39 @@ Hallinnoi ilmoituksia
 {% endblock %}
 
 {% block header %}
-<h1>Hallinnoi ilmoituksia</h1>
+<h2 class="text-center my-5">Hallinnoi ilmoituksia</h2>
 {% endblock %}
 
 {% block content %}
-<ul>
-    {% for listing in listings %}
-        <li>
-            <h2>{{ listing.name }}</h2>
-            <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
-            <p>Sukupuoli: {{ listing.sex }}</p>
-            <p>Sijainti: {{ listing.location_name }}</p>
-            <p>Laji/rotu: {{ listing.species_breed }}</p>
-            <p>Kuvaus: {{ listing.description }}</p>
-            <p>Ilmoittaja: {{ listing.username }}</p>
-            <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
-            <form action="/admin/delete_listing/{{ listing.id }}" method="post">
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                <input type="submit" value="Poista" onclick="return confirm('Haluatko varmasti poistaa ilmoituksen?');">
-            </form>
-        </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% for listing in listings %}
+                    <li class="list-group-item">
+                        <h4 class="text-center">{{ listing.name }}</h4>
+                        <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
+                        <p>Sukupuoli: {{ listing.sex }}</p>
+                        <p>Sijainti: {{ listing.location_name }}</p>
+                        <p>Laji/rotu: {{ listing.species_breed }}</p>
+                        <p>Kuvaus: {{ listing.description }}</p>
+                        <p>Ilmoittaja: {{ listing.username }}</p>
+                        <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+                        <form action="/admin/delete_listing/{{ listing.id }}" method="post">
+                            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                            <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                            <input type="submit" class="btn btn-danger btn-block" value="Poista" onclick="return confirm('Haluatko varmasti poistaa ilmoituksen?');">
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
 
-{% if message %}
-    <p>
-        Virhe: {{ message }}
-{% endif %}
+            {% if message %}
+                <div class="alert alert-danger mt-3">
+                    Virhe: {{ message }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

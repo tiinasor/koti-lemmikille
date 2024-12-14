@@ -5,21 +5,29 @@ Koti lemmikille
 {% endblock %}
 
 {% block header %}
-<h1>Koti lemmikille</h1>
+<h2 class="text-center my-5">Koti lemmikille</h2>
 {% endblock %}
 
 {% block content %}
-<h2>Tutustu kotia etsiviin lemmikkeihin:</h2>
-<ul>
-    {% for category in categories %}
-    <li><a href="/category/{{ category.id }}">{{ category.name }}</a>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h4 class="text-center">Tutustu kotia etsiviin lemmikkeihin:</h4>
+            <ul class="list-group">
+                {% for category in categories %}
+                    <li class="list-group-item text-center">
+                        <a href="/category/{{ category.id }}">{{ category.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
 
-<h2>Etsitkö uutta kotia lemmikillesi?</h2>
-{% if session.user_id %}
-    Voit lisätä ilmoituksen kotia etsivästä lemmikistä <a href="/add_listing">täällä</a>
-{% else %}
-    Jos haluat lisätä ilmoituksen kotia etsivästä lemmikistä, <a href="/login">kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> 
-{% endif %}
+            <h4 class="text-center mt-4">Etsitkö uutta kotia lemmikillesi?</h4>
+            {% if session.user_id %}
+                <p class="text-center">Voit lisätä ilmoituksen kotia etsivästä lemmikistä <a href="/add_listing">täällä</a></p>
+            {% else %}
+                <p class="text-center">Jos haluat lisätä ilmoituksen kotia etsivästä lemmikistä, <a href="/login">kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a></p>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -5,43 +5,52 @@
 {% endblock %}
 
 {% block header %}
-<h1>{{ thread_subject }}</h1>
+<h2 class="text-center my-5">{{ thread_subject }}</h2>
 {% endblock %}
 
 {% block content %}
-{% if session.user_id %}
-    <form action="/send_message" method="post">
-        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-        <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
-        <input type="hidden" name="thread_id" value="{{ thread_id }}">
-        <label for="message{{ listing.id }}">Lähetä viesti:</label>
-        <br>
-        <textarea id="message" name="message" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
-        <br>
-        <span id="char_count">{{ 2000 - (request.form.get("message", "")|length) }}</span> merkkiä jäljellä
-        <br>
-        <button type="submit">Lähetä</button>
-    </form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            {% if session.user_id %}
+                <form action="/send_message" method="post">
+                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                    <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
+                    <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                    <div class="form-group">
+                        <label for="message{{ listing.id }}">Lähetä viesti:</label>
+                        <textarea id="message" name="message" class="form-control" rows="5" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
+                        <small id="char_count" class="form-text text-muted">{{ 2000 - (request.form.get("message", "")|length) }} merkkiä jäljellä</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Lähetä</button>
+                </form>
 
-    {% if errors %}
-        <ul>
-            {% for error in errors %}
-                <li>{{ error }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-{% endif%}
+                {% if errors %}
+                    <div class="alert alert-danger mt-3">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% for message in messages %}
+                    <li class="list-group-item">
+                        <p><strong>{{ message.username }}</strong>:</p>
+                        <p>{{ message.message }}</p>
+                        <p>{{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
 </div>
-
-<ul>
-    {% for message in messages %}
-        <li>
-            <p>Lähettäjä: {{ message.username }}</p>
-            <p>Viesti: {{ message.message }}</p>
-            <p>Aika: {{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
-        </li>
-    {% endfor %}
-</ul>
 
 <script>
     function updateCharCount() {

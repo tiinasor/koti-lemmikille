@@ -5,23 +5,29 @@
 {% endblock %}
 
 {% block header %}
-<h1>{{ category_name }}</h1>
+<h2 class="text-center my-5">{{ category_name }}</h2>
 {% endblock %}
 
 {% block content %}
-<ul>
-    {% for listing in listings %}
-        <li>
-            <h2>{{ listing.name }}</h2>
-            <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
-            <p>Sukupuoli: {{ listing.sex }}</p>
-            <p>Sijainti: {{ listing.location_name }}</p>
-            <p>Laji/rotu: {{ listing.species_breed }}</p>
-            <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
-            <a href="/listing/{{ listing.id }}">
-                <button>Katso ilmoitus</button>
-            </a>
-        </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <ul class="list-group">
+                {% for listing in listings %}
+                    <li class="list-group-item">
+                        <h4 class="text-center">{{ listing.name }}</h4>
+                        <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
+                        <p>Sukupuoli: {{ listing.sex }}</p>
+                        <p>Sijainti: {{ listing.location_name }}</p>
+                        <p>Laji/rotu: {{ listing.species_breed }}</p>
+                        <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+                        <div class="text-center">
+                            <a href="/listing/{{ listing.id }}" class="btn btn-primary">Katso ilmoitus</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -5,80 +5,89 @@ Uusi ilmoitus
 {% endblock %}
 
 {% block header %}
-<h1>Uusi ilmoitus</h1>
+<h2 class="text-center my-5">Uusi ilmoitus</h2>
 {% endblock %}
 
 {% block content %}
-<form action="/add_listing" method="post">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <p>
-        Täytä alle kotia etsivän lemmikin tiedot. Tähdellä (*) merkityt kentät ovat pakollisia.
-    <p>
-        Nimi* (korkeintaan 30 merkkiä)
-        <br>
-        <input type="text" name="name" value="{{ request.form["name"] }}" maxlength="30">
-    <p>
-        Ikä*
-        <br>
-        <input type="number" id="age_years" name="age_years" min="0" max="200" value="{{ request.form.get("age_years", 0) }}" onkeydown="return false">
-        vuotta,
-        <input type="number" id="age_months" name="age_months" min="0" max="11" value="{{ request.form.get("age_months", 0) }}" onkeydown="return false">
-        kuukautta
-    <p>
-        Sukupuoli*
-        <br>
-        <select name="sex">
-            <option value="male" {% if request.form["sex"] == "male" %}selected{% endif %}>Koiras</option>
-            <option value="female" {% if request.form["sex"] == "female" %}selected{% endif %}>Naaras</option>
-            <option value="unknown" {% if request.form["sex"] == "unknown" %}selected{% endif %}>Tuntematon</option>
-        </select>
-    <p>
-        Sijainti*
-        <br>
-        <select name="location">
-            {% for location in locations %}
-                <option value="{{ location.id }}" {% if request.form["location"] == location.id|string %}selected{% endif %}>
-                    {{ location.name }}
-                </option>
-            {% endfor %}
-        </select>
-    <p>
-        Kategoria*
-        <br>
-        <select name="category">
-            {% for category in categories %}
-                <option value="{{ category.id }}" {% if request.form["category"] == category.id|string %}selected{% endif %}>
-                    {{ category.name }}
-                </option>
-            {% endfor %}
-        </select>
-    <p>
-        Tarkempi laji/rotu (korkeintaan 50 merkkiä)
-        <br>
-        <input type="text" name="species_breed" value="{{ request.form["species_breed"] }}" maxlength="50">
-    <p>
-        Alla voit kuvailla tarkemmin lemmikkiä, esimerkiksi sen luonnetta ja tarpeita.
-        <br>
-        <textarea id="description" name="description" rows="15" cols="70" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("description", "") }}</textarea>
-        <br>
-        <span id="char_count">{{ 2000 - (request.form.get("description", "")|length) }}</span> merkkiä jäljellä
-    </p>
-    <script>
-        function updateCharCount() {
-            var textarea = document.getElementById("description");
-            var charCount = document.getElementById("char_count");
-            charCount.textContent = 2000 - textarea.value.length;
-        }
-    </script>   
-    <p>
-        <input type="submit" value="Lisää ilmoitus">
-</form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <form action="/add_listing" method="post">
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                <p>
+                    Täytä alle kotia etsivän lemmikin tiedot. Tähdellä (*) merkityt kentät ovat pakollisia.
+                </p>
+                <div class="form-group">
+                    <label for="name">Nimi* (korkeintaan 30 merkkiä)</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ request.form["name"] }}" maxlength="30">
+                </div>
+                <div class="form-group">
+                    <label for="age_years">Ikä*</label>
+                    <div class="d-flex">
+                        <input type="number" class="form-control" id="age_years" name="age_years" min="0" max="200" value="{{ request.form.get("age_years", 0) }}" onkeydown="return false">
+                        <span class="mx-2">vuotta</span>
+                        <input type="number" class="form-control" id="age_months" name="age_months" min="0" max="11" value="{{ request.form.get("age_months", 0) }}" onkeydown="return false">
+                        <span class="mx-2">kuukautta</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="sex">Sukupuoli*</label>
+                    <select class="form-control" id="sex" name="sex">
+                        <option value="male" {% if request.form["sex"] == "male" %}selected{% endif %}>Koiras</option>
+                        <option value="female" {% if request.form["sex"] == "female" %}selected{% endif %}>Naaras</option>
+                        <option value="unknown" {% if request.form["sex"] == "unknown" %}selected{% endif %}>Tuntematon</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">Sijainti*</label>
+                    <select class="form-control" id="location" name="location">
+                        {% for location in locations %}
+                            <option value="{{ location.id }}" {% if request.form["location"] == location.id|string %}selected{% endif %}>
+                                {{ location.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="category">Kategoria*</label>
+                    <select class="form-control" id="category" name="category">
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" {% if request.form["category"] == category.id|string %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="species_breed">Tarkempi laji/rotu (korkeintaan 50 merkkiä)</label>
+                    <input type="text" class="form-control" id="species_breed" name="species_breed" value="{{ request.form["species_breed"] }}" maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="description">Alla voit kuvailla tarkemmin lemmikkiä, esimerkiksi sen luonnetta ja tarpeita.</label>
+                    <textarea class="form-control" id="description" name="description" rows="5" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("description", "") }}</textarea>
+                    <small id="char_count" class="form-text text-muted">{{ 2000 - (request.form.get("description", "")|length) }} merkkiä jäljellä</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Lisää ilmoitus</button>
+            </form>
 
-{% if errors %}
-    <ul>
-        {% for error in errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+            {% if errors %}
+                <div class="alert alert-danger mt-3">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function updateCharCount() {
+        var textarea = document.getElementById("description");
+        var charCount = document.getElementById("char_count");
+        charCount.textContent = 2000 - textarea.value.length;
+    }
+</script>
 {% endblock %}

@@ -1,12 +1,9 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ url_for("static", filename="layout.css") }}">
 
 <title>
   {% block title %}{% endblock %}
 </title>
-
-<header>
-  {% block header %}{% endblock %}
-</header>
 
 <div class="navbar">
   <div class="left">
@@ -43,6 +40,10 @@
     {% endif %}
   </div>
 </div>
+
+<header>
+  {% block header %}{% endblock %}
+</header>
 
 <div class="content">
   {% block content %}{% endblock %}
