@@ -34,27 +34,27 @@ def send_message(sender_id, thread_id, message):
 def get_threads(user_id):
     sql = text("""
         SELECT 
-            threads.id,
-            threads.listing_id,
-            threads.created_at,
-            CASE
-                WHEN threads.inquirer_id = :user_id THEN lister.username
-                ELSE inquirer.username
-            END AS username,
-            listing.name AS listing_name,
-            messages.created_at AS message_created_at
+        threads.id,
+        threads.listing_id,
+        threads.created_at,
+        CASE
+            WHEN threads.inquirer_id = :user_id THEN lister.username
+            ELSE inquirer.username
+        END AS username,
+        listing.name AS listing_name,
+        latest_messages.created_at AS message_created_at
         FROM threads
         JOIN users AS inquirer ON threads.inquirer_id = inquirer.id
         JOIN users AS lister ON threads.lister_id = lister.id
         JOIN listings AS listing ON threads.listing_id = listing.id
-        JOIN messages ON threads.id = messages.thread_id
-        WHERE threads.inquirer_id = :user_id OR threads.lister_id = :user_id
-        AND messages.created_at = (
-            SELECT MAX(created_at)
+        JOIN (
+            SELECT thread_id, MAX(created_at) AS created_at
             FROM messages
-            WHERE thread_id = threads.id
-        )
-        ORDER BY messages.created_at DESC
+            GROUP BY thread_id
+        ) AS latest_messages ON threads.id = latest_messages.thread_id
+        JOIN messages ON latest_messages.thread_id = messages.thread_id AND latest_messages.created_at = messages.created_at
+        WHERE threads.inquirer_id = :user_id OR threads.lister_id = :user_id
+        ORDER BY latest_messages.created_at DESC
     """)
     result = db.session.execute(sql, {"user_id": user_id})
     threads = result.fetchall()
