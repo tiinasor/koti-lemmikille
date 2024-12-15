@@ -2,7 +2,16 @@ from db import db
 from sqlalchemy.sql import text
 
 def get_all_categories():
-    sql = text("SELECT id, name FROM categories ORDER BY name")
+    sql = text("""
+        SELECT 
+            categories.id, 
+            categories.name, 
+            COUNT(listings.id) AS listing_count
+        FROM categories
+        LEFT JOIN listings ON categories.id = listings.category AND listings.visible = TRUE
+        GROUP BY categories.id
+        ORDER BY categories.name
+    """)
     return db.session.execute(sql).fetchall()
 
 def category_exists(category_id):

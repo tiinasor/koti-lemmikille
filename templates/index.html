@@ -16,7 +16,7 @@ Koti lemmikille
             <ul class="list-group">
                 {% for category in categories %}
                     <li class="list-group-item text-center">
-                        <a href="/category/{{ category.id }}">{{ category.name }}</a>
+                        <a href="/category/{{ category.id }}">{{ category.name }} ({{ category.listing_count }} ilmoitusta)</a>
                     </li>
                 {% endfor %}
             </ul>
