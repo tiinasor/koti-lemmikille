@@ -1,7 +1,6 @@
 .navbar {
     background-color: #8ed2c9;
     font-family: Arial;
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -46,6 +45,7 @@
     position: absolute;
     background-color: #f9f9f9;
     min-width: 100%;
+    z-index: 1000;
 }
 
 .dropdown-content a {
@@ -78,4 +78,14 @@
     color: black;
     margin-left: 10px;
     text-decoration: none;
+}
+
+.sidebar-left,
+.sidebar-right {
+    background-color: #fcf4d9;
+    padding: 20px;
+}
+
+.container-fluid > .row:first-child {
+    height: 100%;
 }

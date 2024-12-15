@@ -11,7 +11,7 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             {% if session.user_id %}
                 <form action="/send_message" method="post">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -37,7 +37,7 @@
         </div>
     </div>
     <div class="row justify-content-center mt-4">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <ul class="list-group">
                 {% for message in messages %}
                     <li class="list-group-item">

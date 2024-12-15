@@ -7,23 +7,24 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <h2 class="text-center">{{ listing.name }}</h2>
-                    <p>Ikä: {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
-                    <p>Sukupuoli: {{ listing.sex }}</p>
-                    <p>Sijainti: {{ listing.location_name }}</p>
-                    <p>Laji/rotu: {{ listing.species_breed }}</p>
-                    <p>Kuvaus: {{ listing.description }}</p>
-                    <p>Ilmoittaja: {{ listing.username }}</p>
-                    <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
+                    <p><strong>Ikä:</strong> {{ listing.years }} vuotta, {{ listing.months }} kuukautta</p>
+                    <p><strong>Sukupuoli:</strong> {{ listing.sex }}</p>
+                    <p><strong>Sijainti:</strong> {{ listing.location_name }}</p>
+                    <p><strong>Laji/rotu:</strong> {{ listing.species_breed }}</p>
+                    <p><strong>Kuvaus:</strong> {{ listing.description }}</p>
+                    <p><strong>Ilmoittaja:</strong> {{ listing.username }}</p>
+                    <p><strong>Ilmoitus jätetty:</strong> {{ listing.created_at }}</p>
                     {% if session.user_id %}
                         {% if session.user_id != listing.user_id %}
                             {% if listing.thread_id %}
                                 <p class="text-center">Olet aloittanut viestiketjun ilmoittajan kanssa.</p>
                                 <div class="text-center">
                                     <button class="btn btn-primary" onclick="location.href='/thread_messages/{{ listing.thread_id }}'">Näytä viestit</button>
+                                </div>
                             {% else %}
                                 <form action="/create_thread" method="post">
                                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -49,13 +50,16 @@
                             {% endif %}
                             
                             {% if message %}
-                                <div class="alert alert-success mt-3">
+                                <div class="alert alert-success mt-3 text-center">
                                     <p>{{ message }}</p>
                                 </div>
                             {% endif %}
                         {% endif %}
                     {% else %}
-                        <p class="text-center">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> lähettääksesi viestin ilmoittajalle.</p>
+                        <p class="text-center">
+                            Oletko kiinnostunut tarjoamaan kodin tälle lemmikille?
+                            <br>
+                            <a href="/login">Kirjaudu sisään</a> tai <a href="/register">rekisteröidy</a> lähettääksesi viestin ilmoittajalle.</p>
                     {% endif %}
                 </div>
             </div>

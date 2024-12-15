@@ -1,13 +1,10 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="{{ url_for("static", filename="layout.css") }}">
 
-<title>
-  {% block title %}{% endblock %}
-</title>
 
 <div class="navbar">
   <div class="left">
-    <a href="/">Etusivu</a>
+    <strong><a href="/">Koti lemmikille</a></strong>
     <div class="dropdown">
       <button class="dropbtn">Ilmoitukset
       </button>
@@ -41,10 +38,22 @@
   </div>
 </div>
 
-<header>
-  {% block header %}{% endblock %}
-</header>
-
-<div class="content">
-  {% block content %}{% endblock %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 sidebar-left">
+      {% block sidebar_left %}{% endblock %}
+    </div>
+    <div class="col-md-6 content">
+      <header>
+        {% block header %}{% endblock %}
+      </header>
+      <title>
+        {% block title %}{% endblock %}
+      </title>
+      {% block content %}{% endblock %}
+    </div>
+    <div class="col-md-3 sidebar-right">
+      {% block sidebar_right %}{% endblock %}
+    </div>
+  </div>
 </div>
