@@ -24,7 +24,7 @@ def format_listing(row):
     else:
         sex = "Tuntematon"
     years, months = convert_age_months(row[2])
-    return {
+    listing = {
         "id": row[0],
         "name": row[1],
         "age_months": row[2],
@@ -38,6 +38,9 @@ def format_listing(row):
         "years": years,
         "months": months
     }
+    if len(row) > 10:
+        listing["thread_id"] = row[10]
+    return listing
 
 def get_listings(query, parameters=None):
     if parameters is None:
@@ -47,7 +50,7 @@ def get_listings(query, parameters=None):
     listings_dict = [format_listing(row) for row in listings]
     return listings_dict
 
-def get_listing(listing_id):
+def get_listing(listing_id, user_id):
     sql = text("""
         SELECT 
             listings.id,
@@ -59,15 +62,18 @@ def get_listing(listing_id):
             listings.description,
             users.username AS username,
             users.id AS user_id,
-            listings.created_at
+            listings.created_at,
+            threads.id AS thread_id
         FROM listings
         JOIN locations ON listings.location = locations.id
         JOIN categories ON listings.category = categories.id
         JOIN users ON listings.user_id = users.id
+        LEFT JOIN threads ON listings.id = threads.listing_id
+        AND threads.inquirer_id = :user_id
         WHERE listings.visible = TRUE
         AND listings.id = :listing_id
     """)
-    return get_listings(sql, {"listing_id": listing_id})[0]
+    return get_listings(sql, {"listing_id": listing_id, "user_id": user_id})[0]
 
 def get_category_listings(category_id):
     sql = text("""

@@ -109,7 +109,7 @@ def add_listing():
 
 @app.route("/listing/<int:listing_id>", methods=["GET"])
 def listing(listing_id):
-    listing = listings.get_listing(listing_id)
+    listing = listings.get_listing(listing_id, session.get("user_id"))
     return render_template("listing.html", listing=listing)
 
 @app.route("/category/<int:category_id>", methods=["GET"])
@@ -167,7 +167,7 @@ def thread_messages(thread_id):
         return redirect("/")
     
     msgs, thread_subject, listing_id = messages.get_thread_messages(thread_id, session["user_id"])
-    listing = listings.get_listing(listing_id)
+    listing = listings.get_listing(listing_id, session.get("user_id"))
     errors = request.args.getlist("errors")
     return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject, listing=listing, thread_id=thread_id, errors=errors)
 
@@ -180,7 +180,7 @@ def create_thread():
     listing_id = request.form["listing_id"]
     message = request.form["message"]
 
-    listing = listings.get_listing(listing_id)
+    listing = listings.get_listing(listing_id, session.get("user_id"))
     errors = []
     if not message:
         errors.append("Viesti ei saa olla tyhjä")
@@ -194,6 +194,7 @@ def create_thread():
     if len(errors) > 0:
         return render_template("listing.html", errors=errors, listing=listing)
     elif messages.initial_message(session["user_id"], lister_id, listing_id, message):
+        listing = listings.get_listing(listing_id, session.get("user_id"))
         return render_template("listing.html", message="Viesti lähetetty", listing=listing)
     else:
         return render_template("listing.html", errors=["Viestin lähettäminen epäonnistui"], listing=listing)

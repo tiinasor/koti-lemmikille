@@ -20,17 +20,23 @@
                     <p>Ilmoitus jätetty: {{ listing.created_at }}</p>
                     {% if session.user_id %}
                         {% if session.user_id != listing.user_id %}
-                            <form action="/create_thread" method="post">
-                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                                <input type="hidden" name="listing_id" value="{{ listing.id }}">
-                                <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
-                                <div class="form-group">
-                                    <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
-                                    <textarea id="message" name="message" class="form-control" rows="5" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
-                                    <small id="char_count" class="form-text text-muted">{{ 2000 - (request.form.get("message", "")|length) }} merkkiä jäljellä</small>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block">Lähetä</button>
-                            </form>
+                            {% if listing.thread_id %}
+                                <p class="text-center">Olet aloittanut viestiketjun ilmoittajan kanssa.</p>
+                                <div class="text-center">
+                                    <button class="btn btn-primary" onclick="location.href='/thread_messages/{{ listing.thread_id }}'">Näytä viestit</button>
+                            {% else %}
+                                <form action="/create_thread" method="post">
+                                    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                                    <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                                    <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
+                                    <div class="form-group">
+                                        <label for="message{{ listing.id }}">Oletko kiinnostunut tarjoamaan kodin tälle lemmikille? Lähetä viesti ilmoittajalle:</label>
+                                        <textarea id="message" name="message" class="form-control" rows="5" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
+                                        <small id="char_count" class="form-text text-muted">{{ 2000 - (request.form.get("message", "")|length) }} merkkiä jäljellä</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block">Lähetä</button>
+                                </form>
+                            {% endif %}
 
                             {% if errors %}
                                 <div class="alert alert-danger mt-3">
