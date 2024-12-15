@@ -103,7 +103,7 @@ def add_listing():
         if len(errors) > 0:
             return render_template("add_listing.html", errors=errors, categories=categories.get_all_categories(), locations=locations.get_all_locations())
         elif listings.add_listing(name, age, sex, location, category, species_breed, description, user_id=session["user_id"]):
-            return redirect("/")
+            return redirect("/user_listings")
         else:
             return render_template("add_listing.html", errors=["Ilmoituksen lisääminen epäonnistui"], categories=categories.get_all_categories(), locations=locations.get_all_locations())
 
