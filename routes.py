@@ -204,11 +204,10 @@ def send_message():
     if "user_id" not in session:
         return redirect("/")
     users.check_csrf()
-    lister_id = int(request.form["lister_id"])
     message = request.form["message"]
     thread_id = request.form["thread_id"]
 
-    thread_exists = messages.thread_exists(thread_id, session["user_id"], lister_id)
+    thread_exists = messages.thread_exists(thread_id, session["user_id"])
 
     errors = []
     if not message:
@@ -224,3 +223,16 @@ def send_message():
         return redirect(url_for("thread_messages", thread_id=thread_id))
     else:
         return redirect(url_for("thread_messages", errors=["Viestin lähettäminen epäonnistui"], thread_id=thread_id))
+    
+@app.route("/delete_message/<int:message_id>", methods=["POST"])
+def delete_message(message_id):
+    if "user_id" not in session:
+        return redirect("/")
+    users.check_csrf()
+    thread_id = request.form["thread_id"]
+
+    if messages.delete_message(message_id, session["user_id"]):
+        return redirect(url_for("thread_messages", thread_id=thread_id))
+    else:
+        return redirect(url_for("thread_messages", errors=["Viestin poistaminen epäonnistui"], thread_id=thread_id))
+    

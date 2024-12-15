@@ -42,5 +42,6 @@ CREATE TABLE messages (
     thread_id INTEGER REFERENCES threads,
     sender_id INTEGER REFERENCES users,
     message TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    visible BOOLEAN DEFAULT TRUE
 );

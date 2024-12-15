@@ -63,7 +63,12 @@ def get_threads(user_id):
 def get_thread_messages(thread_id, user_id):
     sql = text("""
         SELECT 
-            messages.message,
+            messages.id,
+            CASE
+                WHEN messages.visible = TRUE THEN messages.message
+                ELSE 'Käyttäjä on poistanut viestin'
+            END AS message,
+            messages.sender_id,
             messages.created_at,
             listings.name AS listing_name,
             listings.id AS listing_id,
@@ -79,32 +84,44 @@ def get_thread_messages(thread_id, user_id):
     result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
     rows = result.fetchall()
 
-    listing_name = rows[0][2]
-    listing_id = rows[0][3]
+    listing_name = rows[0][4]
+    listing_id = rows[0][5]
 
     messages = []
     for row in rows:
         message = {
-            "message": row[0],
-            "created_at": row[1],
-            "username": row[4]
+            "message_id": row[0],
+            "message": row[1],
+            "sender_id": row[2],
+            "created_at": row[3],
+            "username": row[6]
         }
         messages.append(message)
 
     return messages, listing_name, listing_id
 
-def thread_exists(thread_id, inquirer_id, lister_id):
+def thread_exists(thread_id, user_id):
     sql = text("""
         SELECT id
         FROM threads
         WHERE id = :thread_id
-        AND (inquirer_id = :inquirer_id AND lister_id = :lister_id)
-        OR (inquirer_id = :lister_id AND lister_id = :inquirer_id)
+        AND (inquirer_id = :user_id OR lister_id = :user_id)
     """)
-    result = db.session.execute(sql, {"thread_id": thread_id, "inquirer_id": inquirer_id, "lister_id": lister_id})
+    result = db.session.execute(sql, {"thread_id": thread_id, "user_id": user_id})
     thread = result.fetchone()
-    if thread:
-        return True
-    else:
-        return False
+    return thread is not None
     
+def delete_message(message_id, user_id):
+    try:
+        sql = text("""
+            UPDATE messages
+            SET visible = FALSE
+            WHERE id = :message_id
+            AND sender_id = :user_id
+        """)
+        db.session.execute(sql, {"message_id":message_id, "user_id":user_id})
+        db.session.commit()
+
+        return True
+    except:
+        return False

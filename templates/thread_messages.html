@@ -15,7 +15,6 @@
             {% if session.user_id %}
                 <form action="/send_message" method="post">
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-                    <input type="hidden" name="lister_id" value="{{ listing.user_id }}">
                     <input type="hidden" name="thread_id" value="{{ thread_id }}">
                     <div class="form-group">
                         <label for="message{{ listing.id }}">Lähetä viesti:</label>
@@ -43,8 +42,20 @@
                 {% for message in messages %}
                     <li class="list-group-item">
                         <p><strong>{{ message.username }}</strong>:</p>
-                        <p>{{ message.message }}</p>
+                        <p>
+                            {% if message.message == "Käyttäjä on poistanut viestin" %}
+                                <em>{{ message.message }}</em>
+                            {% else %}
+                                {{ message.message }}{% endif %}
+                        </p>
                         <p>{{ message.created_at.strftime('%d.%m.%Y %H:%M') }}</p>
+                        {% if session.user_id == message.sender_id and message.message != "Käyttäjä on poistanut viestin" %}
+                            <form action="/delete_message/{{ message.message_id }}" method="post" class="d-inline">
+                                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+                                <input type="hidden" name="thread_id" value="{{ thread_id }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Haluatko varmasti poistaa tämän viestin?');">Poista</button>
+                            </form>
+                        {% endif %}
                     </li>
                 {% endfor %}
             </ul>
