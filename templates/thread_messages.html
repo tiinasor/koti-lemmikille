@@ -17,7 +17,7 @@
                     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
                     <input type="hidden" name="thread_id" value="{{ thread_id }}">
                     <div class="form-group">
-                        <label for="message{{ listing.id }}">Lähetä viesti:</label>
+                        <label for="message{{ listing_id }}">Lähetä viesti:</label>
                         <textarea id="message" name="message" class="form-control" rows="5" maxlength="2000" oninput="updateCharCount()">{{ request.form.get("message", "") }}</textarea>
                         <small id="char_count" class="form-text text-muted">{{ 2000 - (request.form.get("message", "")|length) }} merkkiä jäljellä</small>
                     </div>

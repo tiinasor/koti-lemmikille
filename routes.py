@@ -167,9 +167,8 @@ def thread_messages(thread_id):
         return redirect("/")
     
     msgs, thread_subject, listing_id = messages.get_thread_messages(thread_id, session["user_id"])
-    listing = listings.get_listing(listing_id, session.get("user_id"))
     errors = request.args.getlist("errors")
-    return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject, listing=listing, thread_id=thread_id, errors=errors)
+    return render_template("thread_messages.html", messages=msgs, thread_subject=thread_subject, listing_id=listing_id, thread_id=thread_id, errors=errors)
 
 @app.route("/create_thread", methods=["POST"])
 def create_thread():
